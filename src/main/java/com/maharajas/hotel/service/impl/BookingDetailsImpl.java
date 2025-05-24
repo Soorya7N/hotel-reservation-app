@@ -11,7 +11,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import com.maharajas.hotel.model.BookingDetails;
+import com.maharajas.hotel.model.Room;
 import com.maharajas.hotel.repository.BookingRepository;
+import com.maharajas.hotel.repository.RoomRepository;
 import com.maharajas.hotel.service.BookingService;
 import com.maharajas.hotel.service.utils.BookingServiceUtils;
 
@@ -19,6 +21,9 @@ import com.maharajas.hotel.service.utils.BookingServiceUtils;
 public class BookingDetailsImpl implements BookingService {
     @Autowired
     BookingRepository bookingRepository;
+    
+    @Autowired
+    RoomRepository roomRepository;
     @Autowired
     private SequenceGeneratorService sequenceGeneratorService;
     
@@ -26,12 +31,15 @@ public class BookingDetailsImpl implements BookingService {
     public void createBooking(BookingDetails bookingDetails) {
         long bookRefId = sequenceGeneratorService.generateSequence("booking_sequence");
         bookingDetails.setBookingRefId("HOTEL-2025-" + bookRefId);
-        Integer noOfDaysStay = BookingServiceUtils.calculateStayDays(bookingDetails.getCheckInDate(), bookingDetails.getCheckOutDate());
-        bookingDetails.setNoOfDaysStay(noOfDaysStay);
-        Double totalBillAmt = bookingDetails.getRoomFare() * Double.valueOf(noOfDaysStay);
-        bookingDetails.setBillAmt(totalBillAmt);
-        if (bookingDetails.getCheckOutDate().after(new Date())) {
-        	bookingDetails.setOccupied(true);
+        bookingDetails.setNoOfDaysStay(bookingDetails.getNoOfDaysStay());
+        bookingDetails.setBillAmt(bookingDetails.getBillAmt());
+        bookingDetails.setOccupied(true);
+
+        Optional<Room> optionalRoom = roomRepository.findById(bookingDetails.getRoomNum());
+        if(optionalRoom.isPresent()) {
+        	Room room = optionalRoom.get();
+        	room.setStatus("Occupied");
+        	roomRepository.save(room);
         }
         bookingRepository.save(bookingDetails);
     }
@@ -45,8 +53,12 @@ public class BookingDetailsImpl implements BookingService {
         	if (booking.getCheckOutDate() == null) {
         		BookingServiceUtils.calculateBill(booking.getCheckInDate(), booking.getCheckOutDate(), booking.getRoomFare(), booking);
         		
+        	} else if (booking.isOccupied() && booking.getCheckOutDate() != null && booking.getCheckOutDate().before(new Date())) {
+        		booking.setCheckOutDate(new Date());
+        		BookingServiceUtils.calculateBill(booking.getCheckInDate(), booking.getCheckOutDate(), booking.getRoomFare(), booking);
         	}
-        	booking.setBalance(booking.getBillAmt() - (booking.getAdvance() != null ? booking.getAdvance() : 0.0));
+        	booking.setBalance(booking.getBalance() != null ? booking.getBalance() 
+        			: booking.getBillAmt() - (booking.getAdvance() != null ? booking.getAdvance() : booking.getCheckOutPay() !=null ? booking.getCheckOutPay() : 0.0));
         	return formatBookingDetails(dateFormat, bookingData.get());
         }return null;
     }
@@ -63,7 +75,8 @@ public class BookingDetailsImpl implements BookingService {
         	SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy, hh:mm a");
         	bookingData.forEach(booking -> {
         		BookingServiceUtils.calculateBill(booking.getCheckInDate(), booking.getCheckOutDate(), booking.getRoomFare(), booking);
-        		booking.setBalance(booking.getBillAmt() - (booking.getAdvance() != null ? booking.getAdvance() : 0.0));
+        		booking.setBalance(booking.getBalance() != null ? booking.getBalance() 
+            			: booking.getBillAmt() - (booking.getAdvance() != null ? booking.getAdvance() : booking.getCheckOutPay() !=null ? booking.getCheckOutPay() : 0.0));
         		formatBookingDetails(dateFormat, booking);
         	});
         	return bookingData;
@@ -88,10 +101,19 @@ public class BookingDetailsImpl implements BookingService {
         if(optionalBooking.isPresent()) {
             BookingDetails existingBooking = optionalBooking.get();
             existingBooking.setCheckOutDate(bookingDetails.getCheckOutDate());
-            existingBooking.setBalance(0.0);
             existingBooking.setOccupied(false);
-            existingBooking.setOutStandingAmt(bookingDetails.getBalance());
-
+            existingBooking.setNoOfDaysStay(bookingDetails.getNoOfDaysStay());
+            existingBooking.setBillAmt(bookingDetails.getBillAmt());
+            existingBooking.setCheckOutPay(existingBooking.getBalance() != null ? existingBooking.getBalance() 
+        			: existingBooking.getBillAmt() - (existingBooking.getAdvance() != null ? existingBooking.getAdvance() : 0.0));
+            existingBooking.setBalance(0.0);
+            Optional<Room> optionalRoom = roomRepository.findById(existingBooking.getRoomNum());
+            if(optionalRoom.isPresent()) {
+            	Room room = optionalRoom.get();
+            	room.setStatus("Vacant");
+            	room.setLastCheckOutDate(existingBooking.getCheckOutDate());
+            	roomRepository.save(room);
+            }
             bookingRepository.save(existingBooking);
         }
 		
