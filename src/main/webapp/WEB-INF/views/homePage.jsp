@@ -112,6 +112,13 @@
         .book-btn:hover {
             background-color: #2ecc71;
         }
+        .book-btn.disabled {
+            background: #ccc;
+            color: #666;
+            cursor: not-allowed;
+            box-shadow: none;
+            pointer-events: none;
+        }
     </style>
 </head>
 <body>
@@ -145,7 +152,14 @@
                     </c:forEach>
                 </ul>
             </div>
-            <a class="book-btn" href="/new?roomId=${room.id}">Book Now</a>
+            <c:choose>
+                <c:when test="${room.status == 'Occupied'}">
+                    <a class="book-btn disabled" href="javascript:void(0);" onclick="return false;" title="Room is occupied">Book Now</a>
+                </c:when>
+                <c:otherwise>
+                    <a class="book-btn" href="/new?roomId=${room.id}&roomRent=${room.rent}">Book Now</a>
+                </c:otherwise>
+            </c:choose>
         </div>
     </c:forEach>
 </div>

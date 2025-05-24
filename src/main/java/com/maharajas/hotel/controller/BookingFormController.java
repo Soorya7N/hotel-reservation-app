@@ -44,9 +44,11 @@ public class BookingFormController {
 			return "homePage";
 		}
 		@GetMapping("/new")
-	    public String showBookingForm(@RequestParam(name="roomId",required = false) String roomId, Model model) {
+	    public String showBookingForm(@RequestParam(name="roomId",required = false) String roomId,
+	    		@RequestParam(name="roomRent",required = false) String roomRent, Model model) {
 	        model.addAttribute("bookingDetails", new BookingDetails());
 	        model.addAttribute("roomId", roomId);
+	        model.addAttribute("roomRent", roomRent);
 	        return "booking-form";
 	    }
 		@GetMapping("/getAllBookings")

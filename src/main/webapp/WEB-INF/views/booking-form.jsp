@@ -173,7 +173,7 @@
         <input type="hidden" name="checkOutDate" id="checkOutDate" />
 
         <label for="roomFare">Room Fare</label>
-        <input type="text" id="roomFare" name="roomFare" />
+        <input type="text" id="roomFare" name="roomFare" value="${roomRent}" />
 
         <label for="billAmt">Total Bill Amount</label>
         <input type="text" id="billAmt" name="billAmt" />
