@@ -50,11 +50,11 @@ public class BookingDetailsImpl implements BookingService {
         if (bookingData.isPresent()) {
         	BookingDetails booking = bookingData.get();
         	SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy, hh:mm a");
-        	if (booking.getCheckOutDate() == null) {
+        	if (booking.isOccupied()) {
+        		booking.setCheckOutDate(new Date());
         		BookingServiceUtils.calculateBill(booking.getCheckInDate(), booking.getCheckOutDate(), booking.getRoomFare(), booking);
         		
-        	} else if (booking.isOccupied() && booking.getCheckOutDate() != null && booking.getCheckOutDate().before(new Date())) {
-        		booking.setCheckOutDate(new Date());
+        	} else {
         		BookingServiceUtils.calculateBill(booking.getCheckInDate(), booking.getCheckOutDate(), booking.getRoomFare(), booking);
         	}
         	booking.setBalance(booking.getBalance() != null ? booking.getBalance() 
