@@ -15,7 +15,7 @@
             padding: 0;
         }
         body {
-            font-family: 'Montserrat', sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
             background: linear-gradient(135deg, #e0eafc, #cfdef3);
             min-height: 100vh;
             padding: 30px 20px;
@@ -131,7 +131,7 @@
             <div class="room-status ${room.status == 'Occupied' ? 'occupied' : (room.status == 'Vacant' ? 'vacant' : 'dirty')}">
                 ${room.status}
             </div>
-            <h3>${room.name}</h3>
+            <h3>${room.name} - ${room.id}</h3>
             <p>Type: ${room.type}</p>
             <p>Rent: ₹${room.rent}</p>
             <p>Max Persons: ${room.maxPersonsAllowed}</p>
