@@ -5,7 +5,7 @@
         <title>Booking List</title>
         <style>
             body {
-                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
                 background-color: #f4f6f9;
                 margin: 0;
                 padding: 20px;
@@ -19,12 +19,14 @@
     
             .table-container {
                 overflow-x: auto;
-                background: #ffffff;
+                background: rgba(255, 255, 255, 0.7);
+                backdrop-filter: blur(12px);
                 padding: 24px;
-                margin: 30px auto;
-                border-radius: 16px;
-                box-shadow: 0 6px 24px rgba(0, 0, 0, 0.08);
-                max-width: 100%;
+                margin: 40px auto;
+                border-radius: 20px;
+                box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+                max-width: 95%;
+                transition: all 0.3s ease;
             }
 
             table {
@@ -32,46 +34,49 @@
                 border-collapse: separate;
                 border-spacing: 0;
                 min-width: 960px;
-                font-family: 'Segoe UI', sans-serif;
+                font-family: 'Segoe UI', 'San Francisco', system-ui, sans-serif;
                 font-size: 15px;
-                color: #444;
+                color: #333;
             }
 
             thead {
-                background: linear-gradient(to right, #3f87a6, #ebf8e1);
+                background: linear-gradient(90deg, #0f2027, #203a43, #2c5364);
                 color: #fff;
-                border-radius: 10px;
             }
 
             thead th {
-                padding: 16px 18px;
+                padding: 18px 20px;
                 text-align: left;
                 font-weight: 700;
-                letter-spacing: 0.5px;
-                background-color: #2c3e50;
+                letter-spacing: 0.6px;
+                background-color: rgba(44, 62, 80, 0.95);
                 color: #fff;
                 position: sticky;
                 top: 0;
-                z-index: 1;
+                z-index: 2;
+                backdrop-filter: blur(8px);
+                border-bottom: 2px solid rgba(255, 255, 255, 0.1);
             }
 
             tbody tr {
-                transition: background-color 0.25s ease-in-out, transform 0.1s;
+                transition: background-color 0.3s ease, transform 0.2s ease;
             }
 
             tbody tr:nth-child(even) {
-                background-color: #f7f9fc;
+                background-color: rgba(250, 250, 250, 0.8);
             }
 
             tbody tr:hover {
-                background-color: #e3f2fd;
-                transform: scale(1.005);
+                background-color: #f0f4f8;
+                transform: scale(1.01);
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+                cursor: pointer;
             }
 
             td {
-                padding: 14px 18px;
-                border-bottom: 1px solid #e0e0e0;
-                color: #2d3436;
+                padding: 16px 20px;
+                border-bottom: 1px solid #ddd;
+                color: #222;
                 vertical-align: middle;
             }
 
@@ -80,45 +85,41 @@
             }
 
             a {
-                color: #2e86de;
-                text-decoration: none;
+                color: #0071e3;
                 font-weight: 600;
-                transition: color 0.3s ease;
+                text-decoration: none;
+                transition: all 0.2s ease-in-out;
             }
 
             a:hover {
-                color: #1b4f72;
+                color: #005bb5;
                 text-decoration: underline;
             }
+
             .btn-checkout {
-                background: linear-gradient(45deg, #28a745, #218838);
-                border: none;
+                background: linear-gradient(to right, #0071e3, #005bb5); /* Apple-style blue */
                 color: #fff;
-                padding: 12px 28px;
-                font-size: 1.1rem;
+                padding: 10px 20px;
+                border: none;
+                border-radius: 12px;
+                font-size: 14px;
                 font-weight: 600;
-                border-radius: 30px;
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
                 cursor: pointer;
-                box-shadow:
-                0 4px 15px rgba(40, 167, 69, 0.4),
-                0 0 8px rgba(40, 167, 69, 0.6);
-                transition: 
-                background 0.3s ease,
-                box-shadow 0.3s ease,
-                transform 0.2s ease;
-                text-transform: uppercase;
-                letter-spacing: 1px;
-                user-select: none;
+                box-shadow: 0 4px 14px rgba(0, 113, 227, 0.25);
+                transition: all 0.3s ease;
+                letter-spacing: 0.3px;
             }
+
             .btn-checkout:hover {
-                background: linear-gradient(45deg, #218838, #1e7e34);
-                box-shadow:
-                0 6px 20px rgba(33, 136, 56, 0.7),
-                0 0 12px rgba(33, 136, 56, 0.8);
-                transform: scale(1.05);
+                background: linear-gradient(to right, #005bb5, #003d99);
+                box-shadow: 0 6px 18px rgba(0, 113, 227, 0.35);
+                transform: translateY(-1px);
             }
+
             .btn-checkout:active {
                 transform: scale(0.97);
+                box-shadow: 0 2px 8px rgba(0, 113, 227, 0.5);
             }
             .btn-checkout:focus {
                 outline: none;
@@ -155,23 +156,28 @@
                 background: linear-gradient(135deg, #0056b3, #009fdd);
             }
 
-  /* Greyed out read-only field with subtle shadow */
-  .readonly-status {
-    background-color: #e9ecef;
-    color: #6c757d;
-    border: 1px solid #ced4da;
-    padding: 10px 18px;
-    border-radius: 25px;
-    font-size: 1.1rem;
-    width: 140px;
-    text-align: center;
-    box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
-    user-select: none;
-    cursor: default;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-  }
+            .readonly-status {
+                background: rgba(255, 255, 255, 0.6);
+                color: #495057;
+                padding: 10px 20px;
+                border: none;
+                border-radius: 12px;
+                font-size: 14px;
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+                width: 100px;
+                text-align: center;
+                box-shadow: 
+                    inset 1px 1px 2px rgba(255, 255, 255, 0.8),
+                    inset -1px -1px 2px rgba(0, 0, 0, 0.05),
+                    0 4px 6px rgba(0, 0, 0, 0.05);
+                user-select: none;
+                cursor: default;
+                font-weight: 600;
+                letter-spacing: 1.5px;
+                backdrop-filter: blur(6px); /* Adds a glass-like effect */
+                transition: all 0.3s ease;
+            }
+
     
             @media screen and (max-width: 768px) {
                 table, thead, tbody, th, td, tr {
@@ -209,6 +215,11 @@
         </style>
     </head>
 <body>
+    <div class="rich-home-button">
+    <a href="${pageContext.request.contextPath}/home" class="home-link">
+        <i class="fas fa-home"></i> Home
+    </a>
+    </div>
     <h2>Booking List</h2>
     <div class="table-container">
         <table>
@@ -269,9 +280,4 @@
         </table>
     </div>
 </body>
-<div class="rich-home-button">
-    <a href="${pageContext.request.contextPath}/home" class="home-link">
-        <i class="fas fa-home"></i> Home
-    </a>
-</div>
 </html>

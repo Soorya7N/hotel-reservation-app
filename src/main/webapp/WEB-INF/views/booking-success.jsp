@@ -2,7 +2,7 @@
 <html>
 <head><title>Booking Successful</title>
 <style>
-    .rich-home-button {
+            .rich-home-button {
                 margin-bottom: 30px;
             }
 

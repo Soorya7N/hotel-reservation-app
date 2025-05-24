@@ -4,7 +4,7 @@
     <title>Hotel Booking Form</title>
     <style>
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
             background: linear-gradient(135deg, #74ebd5 0%, #ACB6E5 100%);
             margin: 0;
             padding: 40px 20px;
