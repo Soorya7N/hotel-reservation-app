@@ -41,6 +41,8 @@ public class BookingDetails {
 	private String outStandingAmtPaid;
 	private Double balance;
 	private String remainingBalance;
+	private Double checkOutPay;
+	private String checkOutPayment;
 	private boolean occupied;
 
 	public String getBookingRefId() {
@@ -257,6 +259,22 @@ public class BookingDetails {
 
 	public void setOutStandingAmtPaid(String outStandingAmtPaid) {
 		this.outStandingAmtPaid = outStandingAmtPaid;
+	}
+
+	public Double getCheckOutPay() {
+		return checkOutPay;
+	}
+
+	public void setCheckOutPay(Double checkOutPay) {
+		this.checkOutPay = checkOutPay;
+	}
+
+	public String getCheckOutPayment() {
+		return checkOutPayment;
+	}
+
+	public void setCheckOutPayment(String checkOutPayment) {
+		this.checkOutPayment = checkOutPayment;
 	}
 
 	@Override

@@ -19,55 +19,75 @@
     
             .table-container {
                 overflow-x: auto;
-                box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-                border-radius: 10px;
-                background: white;
-                padding: 20px;
+                background: #ffffff;
+                padding: 24px;
+                margin: 30px auto;
+                border-radius: 16px;
+                box-shadow: 0 6px 24px rgba(0, 0, 0, 0.08);
+                max-width: 100%;
             }
-    
+
             table {
                 width: 100%;
-                border-collapse: collapse;
-                min-width: 1000px;
+                border-collapse: separate;
+                border-spacing: 0;
+                min-width: 960px;
+                font-family: 'Segoe UI', sans-serif;
+                font-size: 15px;
+                color: #444;
             }
-    
+
             thead {
-                background-color: #007bff;
+                background: linear-gradient(to right, #3f87a6, #ebf8e1);
                 color: #fff;
+                border-radius: 10px;
             }
-    
+
             thead th {
-                padding: 12px 15px;
+                padding: 16px 18px;
                 text-align: left;
-                font-weight: 600;
+                font-weight: 700;
+                letter-spacing: 0.5px;
+                background-color: #2c3e50;
+                color: #fff;
+                position: sticky;
+                top: 0;
+                z-index: 1;
             }
-    
+
             tbody tr {
-                transition: background-color 0.2s ease;
+                transition: background-color 0.25s ease-in-out, transform 0.1s;
             }
-    
+
             tbody tr:nth-child(even) {
-                background-color: #f9f9f9;
+                background-color: #f7f9fc;
             }
-    
+
             tbody tr:hover {
-                background-color: #eef5ff;
+                background-color: #e3f2fd;
+                transform: scale(1.005);
             }
-    
+
             td {
-                padding: 12px 15px;
-                border-bottom: 1px solid #ddd;
-                color: #333;
-                vertical-align: top;
+                padding: 14px 18px;
+                border-bottom: 1px solid #e0e0e0;
+                color: #2d3436;
+                vertical-align: middle;
             }
-    
+
+            td:last-child {
+                white-space: nowrap;
+            }
+
             a {
-                color: #007bff;
+                color: #2e86de;
                 text-decoration: none;
-                font-weight: bold;
+                font-weight: 600;
+                transition: color 0.3s ease;
             }
-    
+
             a:hover {
+                color: #1b4f72;
                 text-decoration: underline;
             }
             .btn-checkout {
@@ -104,6 +124,35 @@
                 outline: none;
                 box-shadow:
                 0 0 8px 3px rgba(72, 180, 97, 0.8);
+            }
+            .rich-home-button {
+                margin-bottom: 30px;
+            }
+
+            .home-link {
+                display: inline-flex;
+                align-items: center;
+                padding: 12px 22px;
+                background: linear-gradient(135deg, #007bff, #00c6ff);
+                color: #fff;
+                font-weight: 600;
+                font-size: 1rem;
+                text-decoration: none;
+                border-radius: 50px;
+                box-shadow: 0 6px 18px rgba(0, 123, 255, 0.3);
+                transition: all 0.3s ease-in-out;
+                letter-spacing: 0.5px;
+            }
+
+            .home-link i {
+                margin-right: 10px;
+                font-size: 1.2rem;
+            }
+
+            .home-link:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 10px 24px rgba(0, 123, 255, 0.4);
+                background: linear-gradient(135deg, #0056b3, #009fdd);
             }
 
   /* Greyed out read-only field with subtle shadow */
@@ -220,8 +269,8 @@
         </table>
     </div>
 </body>
-<div style="margin-bottom: 20px;">
-    <a href="${pageContext.request.contextPath}/home" style="text-decoration: none; color: #007bff; font-weight: bold;">
+<div class="rich-home-button">
+    <a href="${pageContext.request.contextPath}/home" class="home-link">
         <i class="fas fa-home"></i> Home
     </a>
 </div>

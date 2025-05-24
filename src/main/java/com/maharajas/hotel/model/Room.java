@@ -1,9 +1,11 @@
 package com.maharajas.hotel.model;
 
+import java.util.Date;
 import java.util.Map;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -19,6 +21,8 @@ public class Room {
 	private Map<String, Boolean> amenities;
 	private Integer maxPersonsAllowed;
 	private String status;
+	@DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
+	private Date lastCheckOutDate;
 	public String getId() {
 		return id;
 	}
@@ -60,6 +64,13 @@ public class Room {
 	}
 	public void setStatus(String status) {
 		this.status = status;
+	}
+	
+	public Date getLastCheckOutDate() {
+		return lastCheckOutDate;
+	}
+	public void setLastCheckOutDate(Date lastCheckOutDate) {
+		this.lastCheckOutDate = lastCheckOutDate;
 	}
 	@Override
 	public String toString() {

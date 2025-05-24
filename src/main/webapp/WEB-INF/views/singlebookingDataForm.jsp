@@ -95,11 +95,45 @@
             border-radius: 5px;
             cursor: pointer;
         }
+        .rich-home-button {
+                margin-bottom: 30px;
+            }
+
+            .home-link {
+                display: inline-flex;
+                align-items: center;
+                padding: 12px 22px;
+                background: linear-gradient(135deg, #007bff, #00c6ff);
+                color: #fff;
+                font-weight: 600;
+                font-size: 1rem;
+                text-decoration: none;
+                border-radius: 50px;
+                box-shadow: 0 6px 18px rgba(0, 123, 255, 0.3);
+                transition: all 0.3s ease-in-out;
+                letter-spacing: 0.5px;
+            }
+
+            .home-link i {
+                margin-right: 10px;
+                font-size: 1.2rem;
+            }
+
+            .home-link:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 10px 24px rgba(0, 123, 255, 0.4);
+                background: linear-gradient(135deg, #0056b3, #009fdd);
+            }
+            .hidden {
+                display: none !important;
+            }
     </style>
     <script>
         function checkoutHandler() {
         var isPaid = document.getElementById('balancePaidCheckbox');
         var bookingId = '${bookings.bookingRefId}';
+        const billAmt = '${bookings.billAmt}';
+        const noOfDaysStay = '${bookings.noOfDaysStay}';
 
         if (isPaid && isPaid.checked) {
             fetch('<c:url value="/api/v1/bookings/checkout/${bookings.bookingRefId}" />', {
@@ -108,6 +142,8 @@
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
+                    billAmt: billAmt,
+                    noOfDaysStay: noOfDaysStay,
                     remainingBalance: 0,
                     occupied: false,
                     checkOutDate: new Date().toISOString()
@@ -115,7 +151,7 @@
             })
             .then(response => {
                 if (response.ok) {
-                    window.location.href = "/booking-success"; // Redirect to success page
+                    window.location.href = "${pageContext.request.contextPath}/bookings/${bookings.bookingRefId}"; // Redirect to success page
                 } else {
                     alert("Error checking out. Please try again.");
                 }
@@ -132,9 +168,27 @@
     function closePopup() {
             document.getElementById('popup').style.display = 'none';
         }
+    function showPaymentPopup() {
+        document.getElementById('paymentPopup').classList.remove('hidden');
+    }
+
+    function closePaymentPopup() {
+        document.getElementById('paymentPopup').classList.add('hidden');
+    }
+
+    function markAsPaid() {
+        closePaymentPopup();
+        alert("Payment marked as complete.");
+        // Optionally set the checkbox as checked or send a request to backend
+    }
     </script>
 </head>
 <body>
+    <div class="rich-home-button">
+        <a href="${pageContext.request.contextPath}/home" class="home-link">
+            <i class="fas fa-home"></i> Home
+        </a>
+    </div>
     <div class="container">
         <div class="card">
             <h2><i class="fas fa-receipt"></i> Booking Details</h2>
@@ -196,7 +250,7 @@
                 <div class="info-value">${bookings.billAmount}</div>
             </div>
 
-            <div class="info-row">
+           <div class="info-row">
                 <div class="info-label"><i class="fas fa-file-invoice-dollar"></i> Balance Amount:</div>
                 <div class="info-value">
                     ${bookings.remainingBalance}
@@ -216,6 +270,7 @@
         </div>
     </div>
 
+    
     <div id="popup">
         <div class="popup-content">
             <p><strong>Please clear the outstanding balance before checkout.</strong></p>
@@ -223,10 +278,15 @@
         </div>
     </div>
 
-    <div style="margin-bottom: 20px; text-align: center; margin-top: 20px;">
-        <a href="${pageContext.request.contextPath}/home" style="text-decoration: none; color: #007bff; font-weight: bold;">
-            <i class="fas fa-home"></i> Home
-        </a>
+    <div id="paymentPopup" class="popup hidden">
+        <div class="popup-content">
+            <h3>Scan to Pay</h3>
+            <img src="${pageContext.request.contextPath}/images/QR.jpeg" alt="UPI QR" class="qr-code" />
+            <p>Please complete the payment and then click 'Mark as Paid'</p>
+            <button onclick="markAsPaid()">Mark as Paid</button>
+            <button onclick="closePaymentPopup()">Cancel</button>
+        </div>
     </div>
+    
 </body>
 </html>
