@@ -1,0 +1,102 @@
+package com.maharajas.hotel.service.impl;
+
+import java.text.SimpleDateFormat;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
+
+import com.maharajas.hotel.model.BookingDetails;
+import com.maharajas.hotel.repository.BookingRepository;
+import com.maharajas.hotel.service.BookingService;
+import com.maharajas.hotel.service.utils.BookingServiceUtils;
+
+@Service
+public class BookingDetailsImpl implements BookingService {
+    @Autowired
+    BookingRepository bookingRepository;
+    @Autowired
+    private SequenceGeneratorService sequenceGeneratorService;
+    
+    @Override
+    public void createBooking(BookingDetails bookingDetails) {
+        long bookRefId = sequenceGeneratorService.generateSequence("booking_sequence");
+        bookingDetails.setBookingRefId("HOTEL-2025-" + bookRefId);
+        Integer noOfDaysStay = BookingServiceUtils.calculateStayDays(bookingDetails.getCheckInDate(), bookingDetails.getCheckOutDate());
+        bookingDetails.setNoOfDaysStay(noOfDaysStay);
+        Double totalBillAmt = bookingDetails.getRoomFare() * Double.valueOf(noOfDaysStay);
+        bookingDetails.setBillAmt(totalBillAmt);
+        if (bookingDetails.getCheckOutDate().after(new Date())) {
+        	bookingDetails.setOccupied(true);
+        }
+        bookingRepository.save(bookingDetails);
+    }
+    
+    @Override
+    public BookingDetails getBookingDetails(String bookingId) {
+        Optional<BookingDetails> bookingData = bookingRepository.findById(bookingId);
+        if (bookingData.isPresent()) {
+        	BookingDetails booking = bookingData.get();
+        	SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy, hh:mm a");
+        	if (booking.getCheckOutDate() == null) {
+        		BookingServiceUtils.calculateBill(booking.getCheckInDate(), booking.getCheckOutDate(), booking.getRoomFare(), booking);
+        		
+        	}
+        	booking.setBalance(booking.getBillAmt() - (booking.getAdvance() != null ? booking.getAdvance() : 0.0));
+        	return formatBookingDetails(dateFormat, bookingData.get());
+        }return null;
+    }
+
+	/*
+	 * @Override public void updateBooking(BookingDetails bookingDetails, String
+	 * bookingId) { bookingRepository.save(bookingDetails) }
+	 */
+    
+    @Override
+    public List<BookingDetails> getAllBookingDetails() {
+        List<BookingDetails> bookingData = bookingRepository.findAll();
+        if (!CollectionUtils.isEmpty(bookingData)) {
+        	SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy, hh:mm a");
+        	bookingData.forEach(booking -> {
+        		BookingServiceUtils.calculateBill(booking.getCheckInDate(), booking.getCheckOutDate(), booking.getRoomFare(), booking);
+        		booking.setBalance(booking.getBillAmt() - (booking.getAdvance() != null ? booking.getAdvance() : 0.0));
+        		formatBookingDetails(dateFormat, booking);
+        	});
+        	return bookingData;
+        }return  Collections.emptyList();
+    }
+
+	private BookingDetails formatBookingDetails(SimpleDateFormat dateFormat, BookingDetails booking) {
+		String checkInDateFormatted = dateFormat.format(booking.getCheckInDate());
+		String checkOutDateFormatted = dateFormat.format(booking.getCheckOutDate() != null ? booking.getCheckOutDate() : new Date());
+		booking.setCheckInDateFormatted(checkInDateFormatted);
+		booking.setCheckOutDateFormatted(checkOutDateFormatted);
+		booking.setRoomRent(BookingServiceUtils.formatCurrency(booking.getRoomFare()));
+		booking.setBillAmount(BookingServiceUtils.formatCurrency(booking.getBillAmt()));
+		booking.setRemainingBalance(BookingServiceUtils.formatCurrency(booking.getBalance()));
+		return booking;
+	}
+
+	@Override
+	public void updateBooking(BookingDetails bookingDetails, String bookingId) {
+		// TODO Auto-generated method stub
+		Optional<BookingDetails> optionalBooking = bookingRepository.findById(bookingId);
+        if(optionalBooking.isPresent()) {
+            BookingDetails existingBooking = optionalBooking.get();
+            existingBooking.setCheckOutDate(bookingDetails.getCheckOutDate());
+            existingBooking.setBalance(0.0);
+            existingBooking.setOccupied(false);
+            existingBooking.setOutStandingAmt(bookingDetails.getBalance());
+
+            bookingRepository.save(existingBooking);
+        }
+		
+	}
+
+	 
+
+}
