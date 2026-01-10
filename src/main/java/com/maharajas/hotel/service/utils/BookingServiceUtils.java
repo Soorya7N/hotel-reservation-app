@@ -22,7 +22,7 @@ public class BookingServiceUtils {
 	        }
 
 	        // Use current time if checkOut is null (ongoing stay)
-	        if (checkOutDate == null || (checkOutDate != null && checkOutDate.before(new Date()))) {
+	        if (checkOutDate == null || (checkOutDate != null && checkOutDate.before(new Date()) && booking.isOccupied())) {
 	            checkOutDate = new Date();
 	        }
 

@@ -119,9 +119,53 @@
             box-shadow: none;
             pointer-events: none;
         }
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #ffffffcc;
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            padding: 12px 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #2c3e50;
+        }
+
+        .header-left img {
+            width: 32px;
+            height: 32px;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #333;
+        }
+        .close-btn:hover {
+            color: #e74c3c;
+        }
     </style>
 </head>
 <body>
+    <div class="page-header">
+        <div class="header-left">
+            <img src="${pageContext.request.contextPath}/images/FNF07079.jpg" alt="Hotel Icon">
+            <span>Booking Details</span>
+        </div>
+        <button class="close-btn" onclick="window.history.back();">&times;</button>
+    </div>
 <h1>Welcome to Hotel Maharajas</h1>
 <div class="button-container">
     <a class="btn" href="/new">
