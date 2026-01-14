@@ -8,22 +8,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.InitBinder;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import com.maharajas.hotel.model.BookingDetails;
 import com.maharajas.hotel.model.Room;
 import com.maharajas.hotel.service.BookingService;
 import com.maharajas.hotel.service.RoomService;
 
-@Controller
+@RestController
 @RequestMapping
+@CrossOrigin(origins = "http://localhost:5173")
 public class BookingFormController {
 
 	 	@InitBinder
@@ -37,11 +31,11 @@ public class BookingFormController {
 		
 		@Autowired
 		private RoomService roomService;
+
 		@GetMapping("/home")
-		public String homePage(Model model) {
+		public List<Room> homePage() {
 			List<Room> rooms = roomService.getAllRoomDetails();
-			model.addAttribute("rooms", rooms);
-			return "homePage";
+			return rooms;
 		}
 		@GetMapping("/new")
 	    public String showBookingForm(@RequestParam(name="roomId",required = false) String roomId,
