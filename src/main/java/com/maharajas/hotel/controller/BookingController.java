@@ -18,7 +18,7 @@ public class BookingController {
 	@Autowired
 	private BookingService bookingService;
 
-	@PostMapping("/createBooking")
+	@PostMapping("/create")
 	public String createBooking(@RequestBody BookingDetails bookingDetails){
 
 		bookingService.createBooking(bookingDetails);
